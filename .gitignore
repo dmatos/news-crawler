@@ -1,0 +1,10 @@
+#dirs
+oglobo/
+bbc/
+elpais/
+folha/
+nytimes/
+
+#project files
+.RData
+.Rhistory
