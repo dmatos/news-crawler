@@ -10,14 +10,23 @@ queryListParams <-ogloboQueryListExample()
 #comando para o que eu procurar como se estivesse no site
 
 #comando para o que eu procurar como se estivesse no site
-query_pt <- 'jornalistas+moral+injury'
+query_pt <- 'venezuela+venezuelanos+migração'
 queryListParams$q<-query_pt
 
 #comando para realizar a busca no site da folha com os valores acima 
-start_date<-'01/06/2021'
-end_date<-'30/06/2022'
+start_date<-'01/10/2016'
+end_date<-'31/03/2017'
+##
+start_date<-'01/04/2018'
+end_date<-'30/04/2018'
+##
+start_date<-'01/08/2018'
+end_date<-'31/08/2018'
+##
+start_date<-'01/03/2020'
+end_date<-'30/06/2021'
 
-ogloboQuery(queryListParams, start_date, end_date)
+ogloboQuery(queryListParams, start_date, end_date,limit=100)
 print('terminou busca para ')
 print(query_pt)
 print(start_date)

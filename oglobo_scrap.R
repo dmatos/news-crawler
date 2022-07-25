@@ -105,7 +105,7 @@ treatLink = function(url, date, start_date=NULL, end_date=NULL){
 
 	if(checkDate(date, start_date, end_date)){
 
-		filename <- paste(paste('oglobo/', date, sep=''), url, sep='-')
+		filename <- paste(paste('data/oglobo/', date, sep=''), url, sep='-')
 
 		items <- rvest::html_nodes(html, 'p')
 
@@ -124,7 +124,9 @@ treatLink = function(url, date, start_date=NULL, end_date=NULL){
 }
 
 oglobo_scraper = function(next_url, query_list=NULL, start_date=NULL, end_date=NULL){
-
+  
+  print(paste('NEXT URL: ', next_url, sep = ''))
+  
 	g1_request <- httr::GET(next_url)
 
 	if(!is.null(query_list)){
@@ -145,29 +147,31 @@ oglobo_scraper = function(next_url, query_list=NULL, start_date=NULL, end_date=N
 	print(g1_html)
 
 	#list of news
-	divClass <- '//*[@class="widget--info__title product-color "]'
+	divClass <- '//*[@class="widget widget--card widget--info"]'
 	print("Buscando noticias em : ")
 	print(divClass)
 	items <- rvest::html_nodes(g1_html, xpath = divClass)
 
 	print(paste("# of results on this page: ", length(items)))
+	
+	if(length(items) < 1) return(NULL)
 
 	for(item in items){
 	    #item_node <- rvest::html_node(item, 'a')
 	  
-	    #print(paste("item: ", item, sep = ""))
-	    link <- rvest::html_node(item, xpath = '//*[@class="widget--info__text-container"]')
-	    link <- rvest::html_node(link, 'a')
+	    print(paste("item: ", item, sep = ""))
+	    link <- rvest::html_node(item, 'a')
+	    #print(paste('link2', link))
 	    link <- rvest::html_attr(link, 'href')
+	    #print(paste('link3', link))
 	    
 	    #print(paste("link: ", link, sep=""))
 	   
-	    date_container <- rvest::html_node(item, xpath = '//*[@class="widget--info__meta--card"]')
+	    date_container <- rvest::html_node(item, xpath = 'div[@class="widget--info__meta--card"]')
 
 	    date_text <- rvest::html_text(date_container)
 	    
-	    #print("date found:  ")
-	    #print(date_text)
+	    #print(paste("DATA: ",date_text, sep = ''))
 
 	    if(is.na(date_text)){
 			date_container <- rvest::html_node(item, xpath = '//*[@class="busca-tempo-decorrido"]')
@@ -197,23 +201,25 @@ oglobo_scraper = function(next_url, query_list=NULL, start_date=NULL, end_date=N
 		}
 	}	
 
-	pagination <- rvest::html_nodes(g1_html, xpath='//*[@class="fundo-cor-produto pagination__load-more"]')
-
-	if(length(pagination) > 0){
-		print (length(pagination))
-
-		#page_a_node <- rvest::html_node(pagination, 'a')
-
-		next_page_href <-  ('https://oglobo.globo.com/busca')
-
-		print(paste("next page href: ", next_page_href))
-
-		return (next_page_href)
-			
-	} else {
-		print ("no pages left")
-		return (NULL)
-	}
+	return(next_url)
+	
+	# pagination <- rvest::html_nodes(g1_html, xpath='//*[@class="fundo-cor-produto pagination__load-more"]')
+	# 
+	# if(length(pagination) > 0){
+	# 	print (length(pagination))
+	# 
+	# 	#page_a_node <- rvest::html_node(pagination, 'a')
+	# 
+	# 	next_page_href <-  ('https://oglobo.globo.com/busca')
+	# 
+	# 	print(paste("next page href: ", next_page_href))
+	# 
+	# 	return (next_page_href)
+	# 		
+	# } else {
+	# 	print ("no pages left")
+	# 	return (NULL)
+	# }
 }
 
 
@@ -223,9 +229,11 @@ oglobo_scraper = function(next_url, query_list=NULL, start_date=NULL, end_date=N
 ogloboQuery = function(query_list, start_date=NULL, end_date=NULL, limit=0){
 
 	print("running ogloboQuery")
+  
+  dir.create(file.path('./data/', 'oglobo'), showWarnings = FALSE)
 
 	if(is.null(start_date) && is.null(end_date) && limit == 0){
-		limit <- 10
+		limit <- 100
 	} else if(limit==0){
 		limit <- Inf
 	}
