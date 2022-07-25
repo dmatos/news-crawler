@@ -72,7 +72,7 @@ folhaTreatLink = function(url, date){
 
 	print(date)
 
-	filename <- paste(paste('folha/', date, sep=''), url, sep='-')
+	filename <- paste(paste('data/folha/', date, sep=''), url, sep='-')
 	
 	print (filename)
 
@@ -89,6 +89,8 @@ folhaTreatLink = function(url, date){
 }
 
 folha_scraper = function(next_url, query_list=NULL){
+  
+  dir.create(file.path('./data/', 'folha'), showWarnings = FALSE)
 
 	folha_request <- httr::GET(next_url)
 
@@ -118,7 +120,7 @@ folha_scraper = function(next_url, query_list=NULL){
 
 	    #date <- as.Date(date_str)
 
-	    folhaTreatLink(link, date_str)
+	    try(folhaTreatLink(link, date_str), silent = TRUE)
 	}	
 
 	pagination <- rvest::html_nodes(folha_html, xpath='//*[@class="c-pagination"]')

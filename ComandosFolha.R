@@ -1,10 +1,13 @@
 #####scraping#####
 
 #comando para determinar o diretório de trabalho
-setwd('/home/dmatos/workspace2/aulas_R/aulas_R_web_scraping/')
+setwd('/home/caramuru/workspace2/news-crawler/')
 
 #instalar pacotes caso não sejam encontrados
+#no Linux tem que instalar os pacotes libssl-dev e libcurl4-openssl-dev
 install.packages('curl')
+install.packages('openssl')
+install.packages('httr')
 install.packages('RCurl')
 install.packages('rvest')
 
@@ -21,13 +24,21 @@ queryListParams <-folhaQueryListExample()
 
 
 #comando para o que eu procurar como se estivesse no site
-query_pt <- 'jornalistas+moral+injury'
-#query_pt <- 'siria+estado+islamico'
+query_pt <- 'portaria'
 queryListParams$q<-query_pt
 
 #comando para realizar a busca no site da folha com os valores acima 
-start_date<-'01/06/2021'
-end_date<-'30/06/2022'
+start_date<-'01/10/2016'
+end_date<-'31/03/2017'
+##
+start_date<-'01/04/2018'
+end_date<-'30/04/2018'
+##
+start_date<-'01/08/2018'
+end_date<-'31/08/2018'
+##
+start_date<-'01/03/2020'
+end_date<-'30/06/2021'
 
 queryListParams$sd <- start_date
 queryListParams$ed <- end_date
