@@ -1,9 +1,5 @@
 #dirs
-oglobo/
-bbc/
-elpais/
-folha/
-nytimes/
+data/
 
 #project files
 .RData
